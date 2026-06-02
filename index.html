@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Antigravity DiffChecker — Premium File Comparison</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  </head>
+  <body class="dark-theme">
+    <div id="app">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-git-compare"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M11 18H8a2 2 0 0 1-2-2V9"/></svg>
+          </div>
+          <span class="brand-name">Antigravity</span>
+          <span class="brand-tag">DIFF</span>
+          <button id="sidebar-toggle" class="btn-sidebar-toggle" aria-expanded="true" aria-label="Toggle Sidebar" title="Collapse Sidebar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+        </div>
+
+        <nav class="sidebar-nav">
+          <button class="nav-item active" data-tab="text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+            <span>Text Compare</span>
+          </button>
+          <button class="nav-item" data-tab="image">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            <span>Image Compare</span>
+          </button>
+          <button class="nav-item" data-tab="pdf">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-digit"><path d="M4 22V4c0-.5.2-1 .6-1.4C5 2.2 5.5 2 6 2h8l6 6v12c0 .5-.2 1-.6 1.4-.4.4-.9.6-1.4.6H6c-.5 0-1-.2-1.4-.6C4.2 21 4 20.5 4 20Z"/><path d="M14 2v6h6"/><path d="M10 12h.01"/><path d="M10 16h.01"/><path d="M14 12h.01"/><path d="M14 16h.01"/><path d="M8 12h.01"/><path d="M8 16h.01"/></svg>
+            <span>PDF Compare</span>
+          </button>
+          <button class="nav-item" data-tab="folder">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-sync"><path d="M9 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v2"/><path d="M12 10a4 4 0 0 0-4 4h3"/><path d="M12 22a4 4 0 0 0 4-4h-3"/><path d="m9 12-2 2 2 2"/><path d="m15 16 2 2-2 2"/></svg>
+            <span>Folder Compare</span>
+          </button>
+          <button class="nav-item" data-tab="history">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+            <span>History</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button class="nav-item" data-tab="settings">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span>Settings</span>
+          </button>
+          <div class="sidebar-user">
+            <span class="status-indicator online"></span>
+            <span class="user-text">Local Mode</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="content">
+        <!-- View Panels -->
+        <div id="panel-text" class="panel active">
+          <!-- Text Compare Header -->
+          <div class="panel-header">
+            <div class="header-title">
+              <h2>Text Comparison</h2>
+              <p>Side-by-side Monaco diff with bidirectional merge</p>
+            </div>
+            <div class="header-actions">
+              <label class="control-toggle" title="Toggle Side-by-Side / Inline view">
+                <input type="checkbox" id="text-view-mode" checked>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Side by Side</span>
+              </label>
+              <div class="btn-divider"></div>
+              <button id="text-swap" class="btn btn-icon" title="Swap Left ↔ Right">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
+                <span>Swap</span>
+              </button>
+              <button id="text-clear" class="btn btn-icon btn-danger-soft" title="Clear all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                <span>Clear</span>
+              </button>
+              <button id="text-save" class="btn btn-icon btn-accent" title="Save to history">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
+                <span>Save</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- File Upload Bar -->
+          <div class="file-upload-bar">
+            <div class="upload-zone" id="upload-left">
+              <input type="file" id="file-left" class="file-input" />
+              <div class="upload-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload-cloud"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 16 4-4 4 4"/></svg>
+                <span>Upload Original File</span>
+              </div>
+            </div>
+            <div class="upload-divider"></div>
+            <div class="upload-zone" id="upload-right">
+              <input type="file" id="file-right" class="file-input" />
+              <div class="upload-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload-cloud"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 16 4-4 4 4"/></svg>
+                <span>Upload Modified File</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Editor Workspaces -->
+          <div class="editor-workspace-container">
+            <!-- Initial Textareas (Before Diff Loading) -->
+            <div class="input-panel-container" id="text-input-view">
+              <div class="input-pane">
+                <div class="pane-header">Original Text</div>
+                <textarea id="raw-text-left" placeholder="Paste or drag original text/code here..."></textarea>
+              </div>
+              <div class="input-pane">
+                <div class="pane-header">Modified Text</div>
+                <textarea id="raw-text-right" placeholder="Paste or drag modified text/code here..."></textarea>
+              </div>
+            </div>
+            
+            <!-- Monaco Editor Diff View (Appears on Diff trigger) -->
+            <div class="monaco-diff-wrapper hidden" id="monaco-diff-container"></div>
+          </div>
+
+          <!-- Bottom Status Bar -->
+          <div class="diff-footer">
+            <button id="btn-compare" class="btn btn-action">Find Differences</button>
+            <div id="diff-stats" class="diff-stats-text hidden">
+              <span class="stat-chip added"><span class="stat-dot"></span><strong class="txt-added">0</strong> added</span>
+              <span class="stat-chip deleted"><span class="stat-dot"></span><strong class="txt-deleted">0</strong> removed</span>
+              <span class="stat-chip unchanged"><span class="stat-dot"></span><strong class="txt-unchanged">0</strong> unchanged</span>
+            </div>
+            <div id="diff-nav-btns" class="diff-nav hidden">
+              <button id="btn-prev-diff" class="btn btn-icon" title="Previous diff (Shift+F7)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
+              </button>
+              <span class="diff-nav-label">Diff <span id="diff-count-badge" class="diff-badge" style="display:none">0</span></span>
+              <button id="btn-next-diff" class="btn btn-icon" title="Next diff (F7)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="panel-image" class="panel">
+          <!-- Image Compare Header -->
+          <div class="panel-header">
+            <div class="header-title">
+              <h2>Image Comparison</h2>
+              <p>Compare PNG, JPG, WebP, SVG images. Support overlay, slider, and difference views</p>
+            </div>
+            <div class="header-actions">
+              <div class="btn-group" id="image-mode-selector">
+                <button class="btn btn-secondary active" data-mode="side-by-side">Side-by-Side</button>
+                <button class="btn btn-secondary" data-mode="slider">Slider Overlay</button>
+                <button class="btn btn-secondary" data-mode="blend">Blend/Opacity</button>
+                <button class="btn btn-secondary" data-mode="diff">Pixel Difference</button>
+              </div>
+              <button id="image-clear" class="btn btn-danger">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Image Dropzones / Uploaders -->
+          <div class="image-upload-container">
+            <div class="image-dropzone" id="img-dropzone-left">
+              <input type="file" id="image-input-left" class="file-input" accept="image/*" />
+              <div class="dropzone-content">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                <p>Original Image</p>
+                <span>Click or drag image file</span>
+              </div>
+              <img id="preview-img-left" class="img-preview hidden" />
+            </div>
+            <div class="image-dropzone" id="img-dropzone-right">
+              <input type="file" id="image-input-right" class="file-input" accept="image/*" />
+              <div class="dropzone-content">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                <p>Modified Image</p>
+                <span>Click or drag image file</span>
+              </div>
+              <img id="preview-img-right" class="img-preview hidden" />
+            </div>
+          </div>
+
+          <!-- Viewports for comparing -->
+          <div class="image-viewport-container hidden" id="image-viewports">
+            <!-- Side-by-Side Viewport -->
+            <div class="viewport-side-by-side" id="viewport-side">
+              <div class="viewport-box">
+                <div class="viewport-label">Original</div>
+                <div class="image-wrap"><img id="img-side-left" /></div>
+              </div>
+              <div class="viewport-box">
+                <div class="viewport-label">Modified</div>
+                <div class="image-wrap"><img id="img-side-right" /></div>
+              </div>
+            </div>
+
+            <!-- Slider Viewport -->
+            <div class="viewport-slider hidden" id="viewport-slide-overlay">
+              <div class="slider-container">
+                <img id="img-slider-back" class="slider-image back" />
+                <div class="slider-front-wrapper" id="slider-front-wrap">
+                  <img id="img-slider-front" class="slider-image front" />
+                </div>
+                <div class="slider-handle" id="slider-drag-handle">
+                  <div class="slider-line"></div>
+                  <div class="slider-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-left-right"><path d="m9 7-5 5 5 5"/><path d="m15 7 5 5-5 5"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Blend Viewport -->
+            <div class="viewport-blend hidden" id="viewport-blend-overlay">
+              <div class="blend-controls">
+                <span>Original</span>
+                <input type="range" id="blend-slider" min="0" max="1" step="0.01" value="0.5" />
+                <span>Modified</span>
+              </div>
+              <div class="blend-display">
+                <img id="img-blend-back" class="blend-img back" />
+                <img id="img-blend-front" class="blend-img front" style="opacity: 0.5;" />
+              </div>
+            </div>
+
+            <!-- Difference Viewport -->
+            <div class="viewport-diff hidden" id="viewport-diff-canvas">
+              <div class="diff-canvas-container">
+                <canvas id="img-diff-canvas"></canvas>
+              </div>
+              <div class="diff-legend">
+                <span class="legend-color"></span>
+                <span>Highlighting exact pixel changes (pink indicates mismatch)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="panel-pdf" class="panel">
+          <!-- PDF Compare Header -->
+          <div class="panel-header">
+            <div class="header-title">
+              <h2>PDF Document Comparison</h2>
+              <p>Compare content extracted from two PDF files side-by-side</p>
+            </div>
+            <div class="header-actions">
+              <button id="pdf-clear" class="btn btn-danger">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- PDF Upload zones -->
+          <div class="file-upload-bar">
+            <div class="upload-zone" id="pdf-upload-left">
+              <input type="file" id="pdf-file-left" class="file-input" accept="application/pdf" />
+              <div class="upload-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                <span id="pdf-label-left">Original PDF File</span>
+              </div>
+            </div>
+            <div class="upload-divider"></div>
+            <div class="upload-zone" id="pdf-upload-right">
+              <input type="file" id="pdf-file-right" class="file-input" accept="application/pdf" />
+              <div class="upload-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                <span id="pdf-label-right">Modified PDF File</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loading state indicator -->
+          <div id="pdf-loading" class="pdf-loading-overlay hidden">
+            <div class="spinner"></div>
+            <p>Extracting text from PDF pages, please wait...</p>
+          </div>
+
+          <!-- PDF Compare Workspace (redirects to text diff display once processed) -->
+          <div class="editor-workspace-container" id="pdf-compare-container">
+            <div class="placeholder-box">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-digit"><path d="M4 22V4c0-.5.2-1 .6-1.4C5 2.2 5.5 2 6 2h8l6 6v12c0 .5-.2 1-.6 1.4-.4.4-.9.6-1.4.6H6c-.5 0-1-.2-1.4-.6C4.2 21 4 20.5 4 20Z"/><path d="M14 2v6h6"/><path d="M10 12h.01"/><path d="M10 16h.01"/><path d="M14 12h.01"/><path d="M14 16h.01"/><path d="M8 12h.01"/><path d="M8 16h.01"/></svg>
+              <h3>Upload PDF Documents</h3>
+              <p>Drag and drop two PDF documents above. We will extract all readable text directly inside your browser and present a full comparison.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="panel-folder" class="panel">
+          <!-- Folder Compare Header -->
+          <div class="panel-header">
+            <div class="header-title">
+              <h2>Folder Comparison</h2>
+              <p>Compare two directory structures locally. See added, deleted, and modified files</p>
+            </div>
+            <div class="header-actions">
+              <button id="folder-clear" class="btn btn-danger">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Folder Select Bars -->
+          <div class="file-upload-bar">
+            <div class="upload-zone" id="folder-upload-left">
+              <input type="file" id="folder-input-left" class="file-input" webkitdirectory directory multiple />
+              <div class="upload-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                <span id="folder-label-left">Select Original Folder</span>
+              </div>
+            </div>
+            <div class="upload-divider"></div>
+            <div class="upload-zone" id="folder-upload-right">
+              <input type="file" id="folder-input-right" class="file-input" webkitdirectory directory multiple />
+              <div class="upload-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                <span id="folder-label-right">Select Modified Folder</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Folder Diff Workspace -->
+          <div class="folder-diff-container" id="folder-workspace">
+            <div class="placeholder-box" id="folder-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-open"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H18a2 2 0 0 1 2 2v2"/></svg>
+              <h3>Compare Folders Side-by-Side</h3>
+              <p>Choose two local folders. We will map all matching files and subfolders, and show differences, creations, and deletions in a tree view.</p>
+            </div>
+            
+            <!-- Result Pane -->
+            <div class="folder-results-layout hidden" id="folder-results">
+              <div class="folder-tree-pane">
+                <div class="pane-search">
+                  <input type="text" id="folder-search" placeholder="Filter files by name..." />
+                  <div class="filter-pills">
+                    <button class="pill active" data-filter="all">All</button>
+                    <button class="pill pill-modified" data-filter="modified">Modified</button>
+                    <button class="pill pill-added" data-filter="added">Added</button>
+                    <button class="pill pill-deleted" data-filter="deleted">Deleted</button>
+                  </div>
+                </div>
+                <div class="folder-file-list" id="folder-list"></div>
+              </div>
+              <div class="folder-compare-pane" id="folder-diff-viewer">
+                <div class="select-file-msg">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mouse-pointer-click"><path d="m9 9 5 12 1.774-5.226L21 14Z"/><path d="m16.071 16.071 4.243 4.243"/><path d="m9 9-4.243-4.243"/><path d="M9 3v3"/><path d="M3 9h3"/><path d="M14 3 8.5 8.5"/><path d="M3 14h3"/></svg>
+                  <h4>Select a file from the tree to compare</h4>
+                  <p>Clicking any modified file will automatically load its diff here in the Monaco editor viewer.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="panel-history" class="panel">
+          <div class="panel-header">
+            <div class="header-title">
+              <h2>Saved Comparisons History</h2>
+              <p>Revisit your past local text and file comparisons. Saved entirely on your computer.</p>
+            </div>
+            <div class="header-actions">
+              <button id="history-clear-all" class="btn btn-danger">Clear All History</button>
+            </div>
+          </div>
+          <div class="history-container">
+            <div class="history-list" id="history-list-container">
+              <!-- Empty state -->
+              <div class="placeholder-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+                <h3>No History Saved</h3>
+                <p>Perform a text comparison and click "Save Diff" in the top bar to save comparisons here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="panel-settings" class="panel">
+          <div class="panel-header">
+            <div class="header-title">
+              <h2>Editor & Comparison Settings</h2>
+              <p>Configure comparison rules, Monaco theme preferences, and local storage limits</p>
+            </div>
+          </div>
+          <div class="settings-grid">
+            <div class="settings-card">
+              <h3>Monaco Editor Preferences</h3>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label for="settings-editor-theme">Editor Theme</label>
+                  <span>Choose the default style for Monaco code highlighting</span>
+                </div>
+                <select id="settings-editor-theme" class="select-control">
+                  <option value="vs-dark">Dark (vs-dark)</option>
+                  <option value="vs-light">Light (vs-light)</option>
+                  <option value="hc-black">High Contrast (hc-black)</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label>Line Wrap</label>
+                  <span>Wrap long lines in the text difference editor</span>
+                </div>
+                <label class="control-toggle">
+                  <input type="checkbox" id="settings-line-wrap" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label>Minimap</label>
+                  <span>Show a mini outline on the right side of the editor</span>
+                </div>
+                <label class="control-toggle">
+                  <input type="checkbox" id="settings-minimap" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h3>Comparison Algorithms</h3>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label>Ignore Whitespace</label>
+                  <span>Don't flag carriage returns, tabs, or spaces as differences</span>
+                </div>
+                <label class="control-toggle">
+                  <input type="checkbox" id="settings-ignore-whitespace" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label>Char-level Highlights</label>
+                  <span>Show word and character level updates within modified lines</span>
+                </div>
+                <label class="control-toggle">
+                  <input type="checkbox" id="settings-char-diff" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label>Colorblind-Friendly Mode</label>
+                  <span>Use high-contrast blue/orange diff colors</span>
+                </div>
+                <label class="control-toggle">
+                  <input type="checkbox" id="settings-colorblind">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
