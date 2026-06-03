@@ -57,6 +57,7 @@ const App = {
         setTimeout(() => {
           TextDiffController.triggerLayout();
           FolderDiffController.triggerLayout();
+          PdfDiffController.triggerLayout();
         }, 210);
       });
     }
@@ -241,11 +242,21 @@ const App = {
   },
 
   restoreHistoryItem(item: HistoryEntry): void {
-    if (item.type === 'text' || item.type === 'pdf') {
+    if (item.type === 'text') {
       // Re-route to Text tab
       this.switchTab('text');
       // Load content
       TextDiffController.loadComparison(
+        item.contentLeft,
+        item.contentRight,
+        item.labelLeft,
+        item.labelRight
+      );
+    } else if (item.type === 'pdf') {
+      // Re-route to PDF tab
+      this.switchTab('pdf');
+      // Load content
+      PdfDiffController.loadComparison(
         item.contentLeft,
         item.contentRight,
         item.labelLeft,

@@ -68,26 +68,25 @@
           <div class="panel-header">
             <div class="header-title">
               <h2>Text Comparison</h2>
-              <p>Side-by-side Monaco diff with bidirectional merge</p>
+              <p>Compare raw text or code files side-by-side with Monaco Editor</p>
             </div>
             <div class="header-actions">
-              <label class="control-toggle" title="Toggle Side-by-Side / Inline view">
+              <label class="control-toggle">
                 <input type="checkbox" id="text-view-mode" checked>
                 <span class="toggle-slider"></span>
-                <span class="toggle-label">Side by Side</span>
+                <span class="toggle-label">Side-by-Side</span>
               </label>
-              <div class="btn-divider"></div>
-              <button id="text-swap" class="btn btn-icon" title="Swap Left ↔ Right">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
+              <button id="text-swap" class="btn btn-secondary" title="Swap Left and Right content">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-right"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
                 <span>Swap</span>
               </button>
-              <button id="text-clear" class="btn btn-icon btn-danger-soft" title="Clear all">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+              <button id="text-clear" class="btn btn-danger" title="Clear inputs">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                 <span>Clear</span>
               </button>
-              <button id="text-save" class="btn btn-icon btn-accent" title="Save to history">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
-                <span>Save</span>
+              <button id="text-save" class="btn btn-primary" title="Save this diff to local history">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save"><path d="M21 20H3V4a2 2 0 0 1 2-2h11l5 5V20z"/><circle cx="12" cy="13" r="4"/><path d="M8 2v4h6"/></svg>
+                <span>Save Diff</span>
               </button>
             </div>
           </div>
@@ -133,18 +132,9 @@
           <div class="diff-footer">
             <button id="btn-compare" class="btn btn-action">Find Differences</button>
             <div id="diff-stats" class="diff-stats-text hidden">
-              <span class="stat-chip added"><span class="stat-dot"></span><strong class="txt-added">0</strong> added</span>
-              <span class="stat-chip deleted"><span class="stat-dot"></span><strong class="txt-deleted">0</strong> removed</span>
-              <span class="stat-chip unchanged"><span class="stat-dot"></span><strong class="txt-unchanged">0</strong> unchanged</span>
-            </div>
-            <div id="diff-nav-btns" class="diff-nav hidden">
-              <button id="btn-prev-diff" class="btn btn-icon" title="Previous diff (Shift+F7)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
-              </button>
-              <span class="diff-nav-label">Diff <span id="diff-count-badge" class="diff-badge" style="display:none">0</span></span>
-              <button id="btn-next-diff" class="btn btn-icon" title="Next diff (F7)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
-              </button>
+              <span>Lines added: <strong class="txt-added">0</strong></span>
+              <span>Lines deleted: <strong class="txt-deleted">0</strong></span>
+              <span>Unchanged: <strong class="txt-unchanged">0</strong></span>
             </div>
           </div>
         </div>
@@ -256,9 +246,26 @@
               <p>Compare content extracted from two PDF files side-by-side</p>
             </div>
             <div class="header-actions">
-              <button id="pdf-clear" class="btn btn-danger">
+              <div class="btn-group" id="pdf-mode-selector" style="margin-right: 16px;">
+                <button class="btn btn-secondary active" id="pdf-btn-text-diff">Text Diff</button>
+                <button class="btn btn-secondary" id="pdf-btn-visual-preview">Visual Preview</button>
+              </div>
+              <label class="control-toggle" id="pdf-view-mode-wrapper">
+                <input type="checkbox" id="pdf-view-mode" checked>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Side-by-Side</span>
+              </label>
+              <button id="pdf-swap" class="btn btn-secondary" title="Swap Left and Right PDF files">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-right"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
+                <span>Swap</span>
+              </button>
+              <button id="pdf-clear" class="btn btn-danger" title="Clear inputs">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                 <span>Clear</span>
+              </button>
+              <button id="pdf-save" class="btn btn-primary" title="Save this PDF diff to local history">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save"><path d="M21 20H3V4a2 2 0 0 1 2-2h11l5 5V20z"/><circle cx="12" cy="13" r="4"/><path d="M8 2v4h6"/></svg>
+                <span>Save Diff</span>
               </button>
             </div>
           </div>
@@ -288,12 +295,23 @@
             <p>Extracting text from PDF pages, please wait...</p>
           </div>
 
-          <!-- PDF Compare Workspace (redirects to text diff display once processed) -->
+          <!-- PDF Compare Workspace -->
           <div class="editor-workspace-container" id="pdf-compare-container">
-            <div class="placeholder-box">
+            <div class="placeholder-box" id="pdf-placeholder">
               <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-digit"><path d="M4 22V4c0-.5.2-1 .6-1.4C5 2.2 5.5 2 6 2h8l6 6v12c0 .5-.2 1-.6 1.4-.4.4-.9.6-1.4.6H6c-.5 0-1-.2-1.4-.6C4.2 21 4 20.5 4 20Z"/><path d="M14 2v6h6"/><path d="M10 12h.01"/><path d="M10 16h.01"/><path d="M14 12h.01"/><path d="M14 16h.01"/><path d="M8 12h.01"/><path d="M8 16h.01"/></svg>
               <h3>Upload PDF Documents</h3>
               <p>Drag and drop two PDF documents above. We will extract all readable text directly inside your browser and present a full comparison.</p>
+            </div>
+            <div class="monaco-diff-wrapper hidden" id="pdf-monaco-diff-container"></div>
+            <div class="pdf-visual-preview-wrapper hidden" id="pdf-visual-preview-container">
+              <div class="pdf-preview-column" id="pdf-preview-column-left">
+                <div class="pdf-column-header">Original Document</div>
+                <div class="pdf-pages-scroll" id="pdf-preview-left-pages"></div>
+              </div>
+              <div class="pdf-preview-column" id="pdf-preview-column-right">
+                <div class="pdf-column-header">Modified Document</div>
+                <div class="pdf-pages-scroll" id="pdf-preview-right-pages"></div>
+              </div>
             </div>
           </div>
         </div>

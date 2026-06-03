@@ -89,6 +89,7 @@ export const FolderDiffController = {
     if (!zone || !input) return;
 
     zone.addEventListener('click', () => input.click());
+    input.addEventListener('click', (e) => e.stopPropagation());
 
     input.addEventListener('change', (e) => {
       const files = Array.from((e.target as HTMLInputElement).files ?? []);
@@ -362,8 +363,10 @@ export const FolderDiffController = {
       automaticLayout: true,
       folding: true,         // Bug fix: enable folding
       glyphMargin: true,     // Required for merge arrows
+      diffAlgorithm: 'advanced',
+      showMoves: true,
       minimap: { enabled: false },
-    });
+    } as any);
 
     this.applyTheme();
 
@@ -419,13 +422,12 @@ export const FolderDiffController = {
         if (lineNum == null) return;
         const changes = folderDiffEditor!.getLineChanges();
         if (changes) {
-          const change = changes.find(
-            (c) =>
-              (c.originalEndLineNumber > 0 &&
-                c.originalStartLineNumber <= lineNum &&
-                lineNum <= c.originalEndLineNumber) ||
-              (c.originalEndLineNumber === 0 && c.originalStartLineNumber === lineNum)
-          );
+          const change = changes.find((c) => {
+            const glyphLine = c.originalEndLineNumber > 0
+              ? c.originalStartLineNumber
+              : Math.max(1, c.originalStartLineNumber);
+            return lineNum === glyphLine;
+          });
           if (change) this.mergeChangeRight(change);
         }
       }
@@ -437,13 +439,12 @@ export const FolderDiffController = {
         if (lineNum == null) return;
         const changes = folderDiffEditor!.getLineChanges();
         if (changes) {
-          const change = changes.find(
-            (c) =>
-              (c.modifiedEndLineNumber > 0 &&
-                c.modifiedStartLineNumber <= lineNum &&
-                lineNum <= c.modifiedEndLineNumber) ||
-              (c.modifiedEndLineNumber === 0 && c.modifiedStartLineNumber === lineNum)
-          );
+          const change = changes.find((c) => {
+            const glyphLine = c.modifiedEndLineNumber > 0
+              ? c.modifiedStartLineNumber
+              : Math.max(1, c.modifiedStartLineNumber);
+            return lineNum === glyphLine;
+          });
           if (change) this.mergeChangeLeft(change);
         }
       }
@@ -611,7 +612,6 @@ export const FolderDiffController = {
 
   /**
    * Merge: push original block → into modified editor
-   * BUG FIX: Uses monacoInstance.Range (not bare `monaco.Range`)
    */
   mergeChangeRight(change: ILineChange): void {
     if (!folderDiffEditor || !monacoInstance) return;
@@ -619,40 +619,12 @@ export const FolderDiffController = {
     const modModel = folderDiffEditor.getModifiedEditor().getModel();
     if (!origModel || !modModel) return;
 
-    let textToCopy = '';
-    if (change.originalEndLineNumber > 0) {
-      const startLine = change.originalStartLineNumber;
-      const endLine = change.originalEndLineNumber;
-      const maxCol = origModel.getLineMaxColumn(endLine);
-      textToCopy = origModel.getValueInRange(
-        new monacoInstance.Range(startLine, 1, endLine, maxCol)
-      );
-      if (change.modifiedEndLineNumber === 0) {
-        textToCopy += '\n';
-      }
-    }
-
-    let rangeToReplace: MonacoEditorType.Range;
-    if (change.modifiedEndLineNumber === 0) {
-      rangeToReplace = new monacoInstance.Range(
-        change.modifiedStartLineNumber,
-        1,
-        change.modifiedStartLineNumber,
-        1
-      );
-    } else {
-      const startLine = change.modifiedStartLineNumber;
-      const endLine = change.modifiedEndLineNumber;
-      const maxCol = modModel.getLineMaxColumn(endLine);
-      rangeToReplace = new monacoInstance.Range(startLine, 1, endLine, maxCol);
-    }
-
-    modModel.pushEditOperations([], [{ range: rangeToReplace, text: textToCopy }], () => null);
+    const textL = getLinesText(origModel, change.originalStartLineNumber, change.originalEndLineNumber);
+    replaceLines(modModel, change.modifiedStartLineNumber, change.modifiedEndLineNumber, textL);
   },
 
   /**
    * Merge: pull modified block ← into original editor
-   * BUG FIX: Uses monacoInstance.Range (not bare `monaco.Range`)
    */
   mergeChangeLeft(change: ILineChange): void {
     if (!folderDiffEditor || !monacoInstance) return;
@@ -660,40 +632,12 @@ export const FolderDiffController = {
     const modModel = folderDiffEditor.getModifiedEditor().getModel();
     if (!origModel || !modModel) return;
 
-    let textToCopy = '';
-    if (change.modifiedEndLineNumber > 0) {
-      const startLine = change.modifiedStartLineNumber;
-      const endLine = change.modifiedEndLineNumber;
-      const maxCol = modModel.getLineMaxColumn(endLine);
-      textToCopy = modModel.getValueInRange(
-        new monacoInstance.Range(startLine, 1, endLine, maxCol)
-      );
-      if (change.originalEndLineNumber === 0) {
-        textToCopy += '\n';
-      }
-    }
-
-    let rangeToReplace: MonacoEditorType.Range;
-    if (change.originalEndLineNumber === 0) {
-      rangeToReplace = new monacoInstance.Range(
-        change.originalStartLineNumber,
-        1,
-        change.originalStartLineNumber,
-        1
-      );
-    } else {
-      const startLine = change.originalStartLineNumber;
-      const endLine = change.originalEndLineNumber;
-      const maxCol = origModel.getLineMaxColumn(endLine);
-      rangeToReplace = new monacoInstance.Range(startLine, 1, endLine, maxCol);
-    }
-
-    origModel.pushEditOperations([], [{ range: rangeToReplace, text: textToCopy }], () => null);
+    const textR = getLinesText(modModel, change.modifiedStartLineNumber, change.modifiedEndLineNumber);
+    replaceLines(origModel, change.originalStartLineNumber, change.originalEndLineNumber, textR);
   },
 
   /**
-   * Updates glyph margin decorations for TWO-WAY merge — same dual-glyph fix as textDiff.
-   * BUG FIX: Uses monacoInstance (not bare `monaco`)
+   * Updates glyph margin decorations for TWO-WAY merge.
    */
   updateMergeDecorations(): void {
     if (!folderDiffEditor || !monacoInstance) return;
@@ -706,8 +650,9 @@ export const FolderDiffController = {
 
     if (changes) {
       changes.forEach((change) => {
-        // RIGHT ARROW on original side — always present for every change
-        const origArrowLine = change.originalStartLineNumber;
+        const origArrowLine = change.originalEndLineNumber > 0
+          ? change.originalStartLineNumber
+          : Math.max(1, change.originalStartLineNumber);
         newOriginalDecs.push({
           range: new monacoInstance!.Range(origArrowLine, 1, origArrowLine, 1),
           options: {
@@ -717,8 +662,9 @@ export const FolderDiffController = {
           },
         });
 
-        // LEFT ARROW on modified side — always present for every change
-        const modArrowLine = change.modifiedStartLineNumber;
+        const modArrowLine = change.modifiedEndLineNumber > 0
+          ? change.modifiedStartLineNumber
+          : Math.max(1, change.modifiedStartLineNumber);
         newModifiedDecs.push({
           range: new monacoInstance!.Range(modArrowLine, 1, modArrowLine, 1),
           options: {
@@ -740,3 +686,74 @@ export const FolderDiffController = {
     );
   },
 };
+
+function getLinesText(model: MonacoEditorType.editor.ITextModel, startLine: number, endLine: number): string {
+  if (endLine === 0) return '';
+  const maxCol = model.getLineMaxColumn(endLine);
+  return model.getValueInRange(new monacoInstance!.Range(startLine, 1, endLine, maxCol));
+}
+
+function replaceLines(model: MonacoEditorType.editor.ITextModel, startLine: number, endLine: number, newText: string): void {
+  const lineCount = model.getLineCount();
+
+  if (endLine === 0) {
+    // This is an insertion
+    if (newText === '') return; // Nothing to insert
+
+    if (startLine === 0) {
+      // Insert at the very beginning
+      if (lineCount === 1 && model.getLineContent(1) === '') {
+        // Model is empty
+        model.pushEditOperations([], [{
+          range: new monacoInstance!.Range(1, 1, 1, 1),
+          text: newText
+        }], () => null);
+      } else {
+        model.pushEditOperations([], [{
+          range: new monacoInstance!.Range(1, 1, 1, 1),
+          text: newText.endsWith('\n') ? newText : newText + '\n'
+        }], () => null);
+      }
+    } else {
+      // Insert after startLine
+      const maxCol = model.getLineMaxColumn(startLine);
+      model.pushEditOperations([], [{
+        range: new monacoInstance!.Range(startLine, maxCol, startLine, maxCol),
+        text: newText.startsWith('\n') ? newText : '\n' + newText
+      }], () => null);
+    }
+  } else {
+    // This is a replacement or deletion
+    if (newText === '') {
+      // Deletion of lines [startLine, endLine]
+      if (endLine < lineCount) {
+        // Delete lines and the following newline
+        model.pushEditOperations([], [{
+          range: new monacoInstance!.Range(startLine, 1, endLine + 1, 1),
+          text: ''
+        }], () => null);
+      } else if (startLine > 1) {
+        // Delete lines and the preceding newline
+        const prevMaxCol = model.getLineMaxColumn(startLine - 1);
+        model.pushEditOperations([], [{
+          range: new monacoInstance!.Range(startLine - 1, prevMaxCol, endLine, model.getLineMaxColumn(endLine)),
+          text: ''
+        }], () => null);
+      } else {
+        // Delete everything
+        model.pushEditOperations([], [{
+          range: new monacoInstance!.Range(1, 1, lineCount, model.getLineMaxColumn(lineCount)),
+          text: ''
+        }], () => null);
+      }
+    } else {
+      // Standard replacement
+      const maxCol = model.getLineMaxColumn(endLine);
+      model.pushEditOperations([], [{
+        range: new monacoInstance!.Range(startLine, 1, endLine, maxCol),
+        text: newText
+      }], () => null);
+    }
+  }
+}
+
